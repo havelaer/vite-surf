@@ -18,20 +18,40 @@ npm install vite-surf react-router-dom express sirv
 npm install -D @types/express
 ```
 
-Configure plugin
-
-
-Configure package json scripts
+Configure `vite.config.ts`
 
 ```diff
-    "dev": "vite",
--   "build": "tsc -b && vite build",
-+   "build:client": "vite build --manifest --outDir dist/client",
-+   "build:server": "vite build --ssr src/server.ts --outDir dist/server",
-+   "build": "npm run build:client && npm run build:server",
-    "lint": "eslint .",
--   "preview": "vite preview"
-+   "start": "node ./dist/server/server.js"
+import { defineConfig } from 'vite'
+import react from "@vitejs/plugin-react";
++import surfPlugin, { virtualClientEntry } from "vite-surf/plugin";
+
+// https://vite.dev/config/
+ export default defineConfig({
+-  plugins: [react()],
+-})
++  build: {
++    rollupOptions: {
++      input: [virtualClientEntry],
++    },
++  },
++  plugins: [surfPlugin(), react()],
++});
+```
+
+
+Configure `package.json` scripts
+
+```diff
+   "scripts": {
+     "dev": "vite",
+-    "build": "tsc -b && vite build",
++    "build:client": "vite build --manifest --outDir dist/client",
++    "build:server": "vite build --ssr src/server.ts --outDir dist/server",
++    "build": "npm run build:client && npm run build:server",
+     "lint": "eslint .",
+-    "preview": "vite preview"
++    "start": "node ./dist/server/server.js"
+   },
 ```
 
 Remove some files, and add some new ones.
@@ -137,4 +157,17 @@ export default (
     />
   </Routes>
 );
+```
+
+Development
+
+```bash
+npm run dev
+```
+
+Production
+
+```bash
+npm run build
+npm start
 ```
