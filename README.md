@@ -2,23 +2,25 @@
 
 A Vite plugin that adds Express server, React Router and SSR.
 
+Note: This is package is under development!
+
 ## Setup
 
-Create Vite app from boilterplate
+Create Vite app from boilerplate:
 
 ```bash
 npm create vite@latest my-react-app -- --template react-ts
 cd my-react-app
 ```
 
-Install dependencies
+Install dependencies:
 
 ```bash
 npm install vite-surf react-router-dom express sirv
 npm install -D @types/express
 ```
 
-Configure `vite.config.ts`
+Configure `vite.config.ts`:
 
 ```diff
 import { defineConfig } from 'vite'
@@ -39,7 +41,7 @@ import react from "@vitejs/plugin-react";
 ```
 
 
-Configure `package.json` scripts
+Configure `package.json` scripts:
 
 ```diff
    "scripts": {
@@ -54,7 +56,7 @@ Configure `package.json` scripts
    },
 ```
 
-Remove some files, and add some new ones.
+Remove some files, and add some new ones:
 
 ```diff
     node_modules/
@@ -119,12 +121,11 @@ import manifest from "../dist/client/.vite/manifest.json";
 
 const app = express();
 
-app.use(sirv("./dist/client"));
-
 app.get("/test", (_req, res) => {
   res.send("hello world");
 });
 
+app.use(sirv("./dist/client"));
 app.use(surfMiddleware({ Document, routes, manifest }));
 
 app.listen(3000);

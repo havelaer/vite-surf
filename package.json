@@ -32,6 +32,10 @@
     "express"
   ],
   "author": "Havelaer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/havelaer/vite-surf.git"
+  },
   "license": "ISC",
   "description": "A Vite plugin that adds Express server, React Router and SSR.",
   "devDependencies": {
