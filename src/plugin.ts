@@ -2,10 +2,9 @@ import React from "react";
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server.js";
 import { Plugin } from "vite";
+import { AssetsProvider } from "./components/AssetsProvider.js";
 
 const postfixRE = /[?#].*$/;
-
-export const virtualClientEntry = "virtual:vite-surf/client-entry";
 
 const clientEntry = "main.js";
 
@@ -16,6 +15,8 @@ function cleanUrl(url: string): string {
 function getDefault(mod: any): any {
   return mod.default;
 }
+
+export const virtualClientEntry = "virtual:vite-surf/client-entry";
 
 function surfPlugin(): Plugin {
   let root: string;
@@ -29,7 +30,7 @@ function surfPlugin(): Plugin {
 
     configureServer(server) {
       return () => {
-        server.middlewares.use("", async function surfPlugin(req, res, next) {
+        server.middlewares.use(async function surfDevMiddleware(req, res, next) {
           if (res.writableEnded) {
             return next();
           }
@@ -48,21 +49,23 @@ function surfPlugin(): Plugin {
               .ssrLoadModule("./src/routes.tsx")
               .then(getDefault);
 
-            const html = renderToString(
-              React.createElement(Document, {
-                assets: [
-                  {
-                    type: "js",
-                    src: `/${virtualClientEntry}`,
-                  },
-                ],
+            const app = React.createElement(AssetsProvider, {
+              assets: [
+                {
+                  type: "js",
+                  src: `/${virtualClientEntry}`,
+                },
+              ],
+              children: React.createElement(Document, {
                 children: React.createElement(
                   StaticRouter,
                   { location: req.originalUrl! },
                   routes
                 ),
-              })
-            );
+              }),
+            });
+
+            const html = renderToString(app);
 
             res.end(
               await server.transformIndexHtml(url, html, req.originalUrl)
