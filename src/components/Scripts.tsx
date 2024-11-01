@@ -8,6 +8,8 @@ export function Scripts() {
     assets
       .filter((a) => a.type === "js")
       // TOTO: support for base url
-      .map(({ src }) => <script type="module" src={`/${src}`}></script>)
+      .map(({ src }) => (
+        <script key={src} type="module" src={`/${src}`}></script>
+      ))
   );
 }

@@ -6,5 +6,5 @@ export function Links() {
 
   return assets
     .filter((a) => a.type === "css")
-    .map(({ src }) => <link rel="stylesheet" href={src} />);
+    .map(({ src }) => <link key={src} rel="stylesheet" href={src} />);
 }
