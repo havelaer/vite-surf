@@ -30,7 +30,11 @@ function surfPlugin(): Plugin {
 
     configureServer(server) {
       return () => {
-        server.middlewares.use(async function surfDevMiddleware(req, res, next) {
+        server.middlewares.use(async function surfDevMiddleware(
+          req,
+          res,
+          next
+        ) {
           if (res.writableEnded) {
             return next();
           }
@@ -50,12 +54,7 @@ function surfPlugin(): Plugin {
               .then(getDefault);
 
             const app = React.createElement(AssetsProvider, {
-              assets: [
-                {
-                  type: "js",
-                  src: `/${virtualClientEntry}`,
-                },
-              ],
+              assets: [{ type: "js", src: virtualClientEntry }],
               children: React.createElement(Document, {
                 children: React.createElement(
                   StaticRouter,
